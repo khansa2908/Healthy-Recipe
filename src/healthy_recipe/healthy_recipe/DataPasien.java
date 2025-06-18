@@ -6,10 +6,6 @@ import java.sql.*;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-/**
- *
- * @author tiara salsabila
- */
 interface PasienData{
     void simpanData();
     void hapusData();

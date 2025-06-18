@@ -11,12 +11,6 @@ import java.awt.event.MouseEvent;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-
-/**
- *
- * @author tiara salsabila
- */
-
 public class Login extends javax.swing.JFrame implements Loginable{
 public Connection con;
 public Statement stm;

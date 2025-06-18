@@ -10,10 +10,7 @@ import java.awt.event.MouseEvent;
 
 
 
-/**
- *
- * @author tiara salsabila
- */
+
 public class Register extends javax.swing.JFrame {
 
     
