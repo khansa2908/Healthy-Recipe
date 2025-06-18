@@ -220,8 +220,13 @@ public class PemberianObat extends javax.swing.JFrame {
                 + "Dosis       : " + dosis + "\n"
                 + "==========================";
 
-        JOptionPane.showMessageDialog(this, hasil, "Resep Pasien", JOptionPane.INFORMATION_MESSAGE);
+        // Load icon printer dari folder /gambar
+        javax.swing.ImageIcon iconPrinter = new javax.swing.ImageIcon(getClass().getResource("/gambar/printer.png"));
+
+        JOptionPane.showMessageDialog(this, hasil, "Resep Pasien", JOptionPane.PLAIN_MESSAGE, iconPrinter);
     }
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
