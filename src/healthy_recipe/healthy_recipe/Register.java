@@ -12,7 +12,24 @@ import java.awt.event.MouseEvent;
 
 
 public class Register extends javax.swing.JFrame {
+public Connection con;
+public Statement stm;
+public PreparedStatement pst;
+public ResultSet rs = null;
 
+public void koneksi(){
+    try{
+        String url = "jdbc:mysql://localhost:3307/healthy_recipe";
+        String user = "root";
+        String pass = "";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        con = DriverManager.getConnection(url, user, pass);
+        stm = con.createStatement();
+        JOptionPane.showMessageDialog(this, "Koneksi berhasil");
+    } catch (ClassNotFoundException | SQLException e) {
+        JOptionPane.showMessageDialog(null, "Koneksi gagal: " + e.getMessage());
+    }
+}
     
     
 
@@ -22,6 +39,7 @@ public class Register extends javax.swing.JFrame {
     public Register() {
         initComponents();
         setLocationRelativeTo(null);
+        koneksi();
         
         jLabel6.addMouseListener(new MouseAdapter(){
         @Override
@@ -95,8 +113,8 @@ public class Register extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton1.setText("Regis");
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setText("REGIST");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -215,6 +233,11 @@ public class Register extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
+         if (jCheckBox1.isSelected()) {
+        jPasswordField1.setEchoChar((char) 0); // Tampilkan password
+    } else {
+        jPasswordField1.setEchoChar('*'); // Sembunyikan password
+    }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
@@ -224,7 +247,7 @@ public class Register extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
                                  
-    String username = jTextField1.getText().trim();
+   String username = jTextField1.getText().trim();
     String password =jPasswordField1.getText().trim(); 
     String role = "";
 
@@ -239,7 +262,7 @@ public class Register extends javax.swing.JFrame {
         return;
     }
     
-     if (!username.matches("[a-zA-Z]+")) {
+      if (!username.matches("[a-zA-Z]+")) {
         JOptionPane.showMessageDialog(this, "Username hanya boleh terdiri dari huruf!");
         return;
     }
@@ -249,14 +272,51 @@ public class Register extends javax.swing.JFrame {
         return;
     }
 
-    // Jika lolos validasi
-    JOptionPane.showMessageDialog(this, "Registrasi berhasil!");
+    // BAGIAN BARU: Kode untuk menyimpan data ke database
+    try {
+        String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+        pst = con.prepareStatement(sql);
+        pst.setString(1, username);
+        pst.setString(2, password); 
+        pst.setString(3, role);
+        
+        int rowsAffected = pst.executeUpdate();
+        
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(this, "Registrasi berhasil!");
+            
+            jTextField1.setText("");
+            jPasswordField1.setText("");
+            jRadioButton1.setSelected(false);
+            jRadioButton2.setSelected(false);
+            new Login().setVisible(true);
+            this.dispose(); 
+        } else {
+            JOptionPane.showMessageDialog(this, "Registrasi gagal, tidak ada baris yang terpengaruh.");
+        }
+    } catch (SQLException e) {
+        
+        if (e.getErrorCode() == 1062) { 
+             JOptionPane.showMessageDialog(this, "Username sudah terdaftar. Silakan gunakan username lain.", "Registrasi Gagal", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Error saat menyimpan data: " + e.getMessage(), "Registrasi Gagal", JOptionPane.ERROR_MESSAGE);
+        }
+        e.printStackTrace(); 
+    } finally {
+        try {
+            if (pst != null) pst.close(); 
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
 
     // Kosongkan input
     jTextField1.setText("");
     jPasswordField1.setText("");
     jRadioButton1.setSelected(false);
     jRadioButton2.setSelected(false);
+    new Login().setVisible(true);
 
 
     }//GEN-LAST:event_jButton1ActionPerformed

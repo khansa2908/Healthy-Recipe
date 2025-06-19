@@ -25,12 +25,12 @@ public void koneksi(){
         Class.forName("com.mysql.cj.jdbc.Driver");
         con = DriverManager.getConnection(url, user, pass);
         stm = con.createStatement();
-        JOptionPane.showMessageDialog(this, "Koneksi berhasil");
+        
     } catch (ClassNotFoundException | SQLException e) {
         JOptionPane.showMessageDialog(null, "Koneksi gagal: " + e.getMessage());
     }
 }
- @Override  
+@Override  
 public boolean login(String username, String password, String role) {
     if (role.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Silakan pilih peran terlebih dahulu.");
@@ -43,7 +43,7 @@ public boolean login(String username, String password, String role) {
         String sql = "SELECT * FROM users WHERE username=? AND password=? AND role=?";
         pst = con.prepareStatement(sql);
         pst.setString(1, username);
-        pst.setString(2, password);
+        pst.setString(2, password); // Jika password disimpan plaintext di DB
         pst.setString(3, role);
 
         rs = pst.executeQuery();
@@ -53,8 +53,10 @@ public boolean login(String username, String password, String role) {
             loginBerhasil = true;
 
             if (role.equals("dokter")) {
+                // Asumsi kelas DataPasien ada dan berfungsi
                 new DataPasien().setVisible(true);
             } else if (role.equals("staff farmasi")) {
+                // Asumsi kelas PemberianObat ada dan berfungsi
                 new PemberianObat().setVisible(true);
             }
 
@@ -65,9 +67,18 @@ public boolean login(String username, String password, String role) {
 
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, "Kesalahan saat login: " + e.getMessage());
-        e.printStackTrace();
+        e.printStackTrace(); // Sangat penting untuk debugging
+    } finally {
+        // Tutup resources untuk menghindari memory leaks
+        try {
+            if (rs != null) rs.close();
+            if (pst != null) pst.close();
+            // Tidak perlu menutup 'con' di sini jika Anda ingin menggunakan koneksi ini di tempat lain
+            // if (con != null) con.close(); 
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
-
     return loginBerhasil;
 }
 
