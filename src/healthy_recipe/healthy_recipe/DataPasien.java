@@ -79,12 +79,22 @@ public ResultSet rs = null;
     public DataPasien() {
         
         initComponents();
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
        
         setLocationRelativeTo(null);
         koneksi();
         
     }
+    public static boolean dataDisimpan = false;
 
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {
+    
+    DataPasien.dataDisimpan = true;
+
+    ResepObat resep = new ResepObat();
+    resep.setVisible(true);
+    this.dispose(); 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -154,7 +164,7 @@ public ResultSet rs = null;
             }
         });
 
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/pngtree-cute-muslim-girl-working-as-female-doctor-png-image_6311984 (1).png"))); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/dokter.png"))); // NOI18N
         jLabel8.setText("jLabel8");
 
         jLabel7.setText("Tanggal Kunjungan");
@@ -286,6 +296,11 @@ public ResultSet rs = null;
     if (!namaValid) {
         JOptionPane.showMessageDialog(this, "Nama hanya boleh mengandung huruf dan spasi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
         return;
+    }
+    Pasien pasien = new Pasien(nama, tanggalLahir);
+
+     if (pasien instanceof Pasien) {
+    pasien.tampilkanInfo();
     }
       try {
             // Get connection

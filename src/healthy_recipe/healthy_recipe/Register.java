@@ -7,6 +7,7 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.ButtonGroup;
 
 
 
@@ -38,6 +39,11 @@ public void koneksi(){
      */
     public Register() {
         initComponents();
+
+        
+        ButtonGroup roleGroup = new ButtonGroup();
+        roleGroup.add(jRadioButton1);
+        roleGroup.add(jRadioButton2);
         setLocationRelativeTo(null);
         koneksi();
         
@@ -247,7 +253,7 @@ public void koneksi(){
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
                                  
-   String username = jTextField1.getText().trim();
+    String username = jTextField1.getText().trim();
     String password =jPasswordField1.getText().trim(); 
     String role = "";
 
@@ -272,51 +278,55 @@ public void koneksi(){
         return;
     }
 
-    // BAGIAN BARU: Kode untuk menyimpan data ke database
     try {
-        String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
-        pst = con.prepareStatement(sql);
-        pst.setString(1, username);
-        pst.setString(2, password); 
-        pst.setString(3, role);
-        
-        int rowsAffected = pst.executeUpdate();
-        
-        if (rowsAffected > 0) {
-            JOptionPane.showMessageDialog(this, "Registrasi berhasil!");
-            
-            jTextField1.setText("");
-            jPasswordField1.setText("");
-            jRadioButton1.setSelected(false);
-            jRadioButton2.setSelected(false);
-            new Login().setVisible(true);
-            this.dispose(); 
-        } else {
-            JOptionPane.showMessageDialog(this, "Registrasi gagal, tidak ada baris yang terpengaruh.");
-        }
-    } catch (SQLException e) {
-        
-        if (e.getErrorCode() == 1062) { 
-             JOptionPane.showMessageDialog(this, "Username sudah terdaftar. Silakan gunakan username lain.", "Registrasi Gagal", JOptionPane.ERROR_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Error saat menyimpan data: " + e.getMessage(), "Registrasi Gagal", JOptionPane.ERROR_MESSAGE);
-        }
-        e.printStackTrace(); 
-    } finally {
-        try {
-            if (pst != null) pst.close(); 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-    
+   String cekSql = "SELECT * FROM users WHERE username = ? OR password = ?";
+    PreparedStatement cekPst = con.prepareStatement(cekSql);
+    cekPst.setString(1, username);
+    cekPst.setString(2, password);
+    ResultSet cekRs = cekPst.executeQuery();
 
-    // Kosongkan input
-    jTextField1.setText("");
-    jPasswordField1.setText("");
-    jRadioButton1.setSelected(false);
-    jRadioButton2.setSelected(false);
-    new Login().setVisible(true);
+    if (cekRs.next()) {
+        JOptionPane.showMessageDialog(this, "Username atau password sudah digunakan oleh pengguna lain!");
+        cekRs.close();
+        cekPst.close();
+        return;
+    }
+    cekRs.close();
+    cekPst.close();
+
+    // Jika belum ada, baru lakukan INSERT
+    String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+    pst = con.prepareStatement(sql);
+    pst.setString(1, username);
+    pst.setString(2, password); 
+    pst.setString(3, role);
+
+    int rowsAffected = pst.executeUpdate();
+
+    if (rowsAffected > 0) {
+        JOptionPane.showMessageDialog(this, "Registrasi berhasil!");
+
+        // Kosongkan input
+        jTextField1.setText("");
+        jPasswordField1.setText("");
+        jRadioButton1.setSelected(false);
+        jRadioButton2.setSelected(false);
+
+        new Login().setVisible(true);
+        this.dispose(); 
+    } else {
+        JOptionPane.showMessageDialog(this, "Registrasi gagal, tidak ada baris yang terpengaruh.");
+    }
+} catch (SQLException e) {
+    JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage(), "Registrasi Gagal", JOptionPane.ERROR_MESSAGE);
+    e.printStackTrace();
+} finally {
+    try {
+        if (pst != null) pst.close(); 
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+}
 
 
     }//GEN-LAST:event_jButton1ActionPerformed

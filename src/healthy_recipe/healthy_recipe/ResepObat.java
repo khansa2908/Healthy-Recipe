@@ -34,8 +34,8 @@ public void koneksi(){
 }
 private void populatePasienCombo() {
     jComboBox1.removeAllItems();
-    jComboBox1.addItem("Pilih");          // item default
-    if (con == null) {                     // koneksi belum ada / gagal
+    jComboBox1.addItem("Pilih");          
+    if (con == null) {                     
         JOptionPane.showMessageDialog(this,
             "Koneksi ke database belum tersedia.",
             "Kesalahan DB", JOptionPane.ERROR_MESSAGE);
@@ -61,12 +61,24 @@ private void populatePasienCombo() {
      */
     public ResepObat() {
     initComponents();
+    setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setLocationRelativeTo(null);
     koneksi();
     populatePasienCombo();
 
     jList1.setModel(diagnosaModel);
     jList2.setModel(obatModel);
+}
+    public static boolean dataDisimpan = false;
+    public static boolean lanjutKePemberianObat = false;
+
+    private void simpanResepActionPerformed(java.awt.event.ActionEvent evt) {
+    
+    DataPasien.dataDisimpan = true;
+
+    PemberianObat pemberian = new PemberianObat();
+    pemberian.setVisible(true);
+    this.dispose(); // Tutup ResepObat
 }
 
     /**
@@ -178,7 +190,7 @@ private void populatePasienCombo() {
             }
         });
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/e9c87ce6-7860-4d74-8dd5-c0ab29a10c7e (1).png"))); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/resep obat.png"))); // NOI18N
         jLabel6.setText("jLabel6");
 
         jButton4.setText("Delete");
@@ -207,10 +219,10 @@ private void populatePasienCombo() {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jButton5)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButton5)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(jLabel3)
@@ -230,7 +242,7 @@ private void populatePasienCombo() {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(79, 79, 79)
                                 .addComponent(jLabel1)))
-                        .addContainerGap(102, Short.MAX_VALUE))
+                        .addContainerGap(139, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -274,9 +286,9 @@ private void populatePasienCombo() {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
-                .addGap(18, 18, 18))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

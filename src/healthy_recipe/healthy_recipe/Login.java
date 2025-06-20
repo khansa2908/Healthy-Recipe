@@ -3,6 +3,7 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.ButtonGroup;
 
 
 
@@ -43,7 +44,7 @@ public boolean login(String username, String password, String role) {
         String sql = "SELECT * FROM users WHERE username=? AND password=? AND role=?";
         pst = con.prepareStatement(sql);
         pst.setString(1, username);
-        pst.setString(2, password); // Jika password disimpan plaintext di DB
+        pst.setString(2, password); 
         pst.setString(3, role);
 
         rs = pst.executeQuery();
@@ -53,16 +54,14 @@ public boolean login(String username, String password, String role) {
             loginBerhasil = true;
 
             if (role.equals("dokter")) {
-                // Asumsi kelas DataPasien ada dan berfungsi
-                new DataPasien().setVisible(true);
+                new Dasboard().setVisible(true);
             } else if (role.equals("staff farmasi")) {
-                // Asumsi kelas PemberianObat ada dan berfungsi
                 new PemberianObat().setVisible(true);
             }
 
-            this.dispose(); // menutup jendela login
+            this.dispose(); 
         } else {
-            JOptionPane.showMessageDialog(this, "Login gagal. Cek kembali username/password/role.");
+            JOptionPane.showMessageDialog(this, "Login gagal. Cek kembali username/password/role.", "Peringatan", JOptionPane.WARNING_MESSAGE);
         }
 
     } catch (SQLException e) {
@@ -88,6 +87,10 @@ public boolean login(String username, String password, String role) {
      */
     public Login() {
         initComponents();
+        
+        ButtonGroup roleGroup = new ButtonGroup();
+        roleGroup.add(jRadioButton1);
+        roleGroup.add(jRadioButton2);
         setLocationRelativeTo(null);
         koneksi();
        
@@ -194,7 +197,7 @@ public boolean login(String username, String password, String role) {
             }
         });
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/health-care-logo-with-heart-shapelove-png_34056 (1).png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/health.png"))); // NOI18N
 
         jLabel6.setText("Belum memiliki akun? Silakan regis terlebih dahulu.");
 
@@ -210,7 +213,9 @@ public boolean login(String username, String password, String role) {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(144, 144, 144)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,7 +251,7 @@ public boolean login(String username, String password, String role) {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(61, 61, 61)
                         .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(29, 29, 29)
