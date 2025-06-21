@@ -5,9 +5,16 @@
 package healthy_recipe.healthy_recipe;
 
 /**
- *
- * @author tiara salsabila
+ * Interface untuk login yang harus mengimplementasikan method login().
  */
 public interface Loginable {
+    /**
+     * Melakukan proses login berdasarkan input yang diberikan.
+     *
+     * @param username Username yang dimasukkan
+     * @param password Password yang dimasukkan
+     * @param role     Peran (dokter/staff farmasi)
+     * @return true jika login berhasil, false jika tidak
+     */
     boolean login(String username, String password, String role);
 }

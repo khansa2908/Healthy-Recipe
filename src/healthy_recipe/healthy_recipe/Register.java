@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package healthy_recipe.healthy_recipe;
 import java.sql.*;
 import javax.swing.JOptionPane;
@@ -9,15 +5,28 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ButtonGroup;
 
-
-
-
+/**
+ * Kelas Register menyediakan form registrasi pengguna baru untuk aplikasi
+ * Healthy Recipe. Form ini memungkinkan pengguna memasukkan username,
+ * password, dan memilih peran (dokter atau staff farmasi) yang kemudian
+ * disimpan ke dalam database.
+ *
+ * Validasi yang diterapkan:
+ * - Username harus terdiri dari huruf saja.
+ * - Password harus berupa angka dan minimal 8 karakter.
+ * - Username dan password tidak boleh sama dengan pengguna lain di database.
+ *
+ * Setelah registrasi berhasil, pengguna akan diarahkan ke form login.
+ */
 public class Register extends javax.swing.JFrame {
 public Connection con;
 public Statement stm;
 public PreparedStatement pst;
 public ResultSet rs = null;
-
+/**
+     * Membuat koneksi ke database MySQL.
+     * Jika gagal, akan menampilkan pesan error dengan JOptionPane.
+     */
 public void koneksi(){
     try{
         String url = "jdbc:mysql://localhost:3307/healthy_recipe";
@@ -26,21 +35,17 @@ public void koneksi(){
         Class.forName("com.mysql.cj.jdbc.Driver");
         con = DriverManager.getConnection(url, user, pass);
         stm = con.createStatement();
-        JOptionPane.showMessageDialog(this, "Koneksi berhasil");
+       
     } catch (ClassNotFoundException | SQLException e) {
         JOptionPane.showMessageDialog(null, "Koneksi gagal: " + e.getMessage());
     }
 }
-    
-    
-
-    /**
-     * Creates new form Register
+ /**
+     * Konstruktor Register untuk menginisialisasi GUI dan koneksi database.
+     * Menambahkan event klik pada label login dan mengatur radio button dalam grup.
      */
     public Register() {
         initComponents();
-
-        
         ButtonGroup roleGroup = new ButtonGroup();
         roleGroup.add(jRadioButton1);
         roleGroup.add(jRadioButton2);
@@ -236,7 +241,10 @@ public void koneksi(){
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
+/**
+     * Menangani tombol checkbox untuk menampilkan/sembunyikan password.
+     * @param evt Event checkbox diklik
+     */
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
          if (jCheckBox1.isSelected()) {
@@ -250,11 +258,14 @@ public void koneksi(){
 
 
     }//GEN-LAST:event_jRadioButton1ActionPerformed
-
+/**
+     * Menangani tombol register. Melakukan validasi input, pengecekan duplikasi,
+     * dan menyimpan data ke database jika semua valid.
+     * @param evt Event tombol diklik
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-                                 
     String username = jTextField1.getText().trim();
-    String password =jPasswordField1.getText().trim(); 
+    String password = String.valueOf(jPasswordField1.getPassword()).trim();
     String role = "";
 
     if (jRadioButton1.isSelected()) {
@@ -272,6 +283,10 @@ public void koneksi(){
         JOptionPane.showMessageDialog(this, "Username hanya boleh terdiri dari huruf!");
         return;
     }
+    if (!password.matches("\\d+")) {
+        JOptionPane.showMessageDialog(null, "Password hanya boleh terdiri dari angka!");
+        return;
+}
 
     if (password.length() < 8) {
         JOptionPane.showMessageDialog(this, "Password minimal harus 8 karakter!");
@@ -338,15 +353,20 @@ public void koneksi(){
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordField1ActionPerformed
-private void loginLabelMouseClicked(java.awt.event.MouseEvent evt){
+ /**
+     * Event klik pada label untuk masuk ke form login.
+     * @param evt MouseEvent
+     */
+    private void loginLabelMouseClicked(java.awt.event.MouseEvent evt){
      Login log = new Login();
      log.setLocationRelativeTo(this);
      log.setVisible(true);
      this.dispose();
      
  }
-    /**
-     * @param args the command line arguments
+ /**
+     * Metode utama untuk menjalankan form Register.
+     * @param args Argument command line (tidak digunakan)
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

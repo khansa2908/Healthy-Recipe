@@ -2,6 +2,8 @@ package healthy_recipe.healthy_recipe;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import javax.swing.JOptionPane;
+import java.awt.*;
+import java.awt.print.*;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -11,14 +13,102 @@ import javax.swing.JOptionPane;
  *
  * @author tiara salsabila
  */
+
 public class PemberianObat extends javax.swing.JFrame {
      Connection con;
      
+class ResepPrinter implements Printable {
+    private String isiResep;
+
+    public ResepPrinter(String isiResep) {
+        this.isiResep = isiResep;
+    }
+
+    @Override
+    public int print(Graphics g, PageFormat pf, int pageIndex) throws PrinterException {
+        if (pageIndex > 0) {
+            return NO_SUCH_PAGE;
+        }
+
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.translate(pf.getImageableX(), pf.getImageableY());
+
+        g.setFont(new Font("Monospaced", Font.PLAIN, 12));
+
+        // Cetak setiap baris isiResep
+        int y = 20;
+        for (String line : isiResep.split("\n")) {
+            g.drawString(line, 10, y);
+            y += 15;
+        }
+
+        return PAGE_EXISTS;
+    }
+}
+class ResepObatData extends ObatDasar implements PrintableData {
+    private String pasien, diagnosa, obat, dosis;
+
+    public ResepObatData(String pasien, String diagnosa, String obat, String dosis) {
+        this.pasien = pasien;
+        this.diagnosa = diagnosa;
+        this.obat = obat;
+        this.dosis = dosis;
+    }
+    public ResepObatData(String pasien, String diagnosa) {
+    this.pasien = pasien;
+    this.diagnosa = diagnosa;
+    this.obat = "Belum ada";  // default value
+    this.dosis = "Belum ditentukan"; // default value
+}
+   public String getPasien() {
+        return pasien;
+    }
+
+    public void setPasien(String pasien) {
+        this.pasien = pasien;
+    }
+
+    public String getDiagnosa() {
+        return diagnosa;
+    }
+
+    public void setDiagnosa(String diagnosa) {
+        this.diagnosa = diagnosa;
+    }
+
+    public String getObat() {
+        return obat;
+    }
+
+    public void setObat(String obat) {
+        this.obat = obat;
+    }
+
+    public String getDosis() {
+        return dosis;
+    }
+
+    public void setDosis(String dosis) {
+        this.dosis = dosis;
+    }
+
+
+    @Override
+    public String getDataFormatted() {
+        return "=== CETAK RESEP OBAT ===\n"
+                + "Nama Pasien : " + pasien + "\n"
+                + "Diagnosa    : " + diagnosa + "\n"
+                + "Obat        : " + obat + "\n"
+                + "Dosis       : " + dosis + "\n"
+                + "==========================";
+    }
+}
 
     /**
      * Creates new form PemberianObat
      */
     public PemberianObat() {
+        super();
         initComponents();
         setLocationRelativeTo(null);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -205,7 +295,7 @@ public class PemberianObat extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     int baris = jTable1.getSelectedRow();
-    
+
     if (baris == -1) {
         JOptionPane.showMessageDialog(this, "Silakan pilih baris resep yang ingin dicetak!");
     } else {
@@ -214,20 +304,22 @@ public class PemberianObat extends javax.swing.JFrame {
         String obat = jTable1.getValueAt(baris, 2).toString();
         String dosis = jTable1.getValueAt(baris, 3).toString();
 
-        String hasil = "=== CETAK RESEP OBAT ===\n"
-                + "Nama Pasien : " + pasien + "\n"
-                + "Diagnosa    : " + diagnosa + "\n"
-                + "Obat        : " + obat + "\n"
-                + "Dosis       : " + dosis + "\n"
-                + "==========================";
+        PrintableData data = new ResepObatData(pasien, diagnosa, obat, dosis);
+        String hasil = data.getDataFormatted();
 
-        // Load icon printer dari folder /gambar
-        javax.swing.ImageIcon iconPrinter = new javax.swing.ImageIcon(getClass().getResource("/gambar/printer.png"));
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setJobName("Cetak Resep");
+        job.setPrintable(new ResepPrinter(hasil));
 
-        JOptionPane.showMessageDialog(this, hasil, "Resep Pasien", JOptionPane.PLAIN_MESSAGE, iconPrinter);
+    boolean doPrint = job.printDialog();
+    if (doPrint) {
+        try {
+            job.print();
+        } catch (PrinterException ex) {
+            JOptionPane.showMessageDialog(this, "Gagal mencetak: " + ex.getMessage());
+        }
     }
-
-
+}
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

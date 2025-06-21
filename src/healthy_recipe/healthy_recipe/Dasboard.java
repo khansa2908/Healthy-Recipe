@@ -1,17 +1,46 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package healthy_recipe.healthy_recipe;
+import javax.swing.JOptionPane;
 
+/**
+ * Kelas `Dasboard` merepresentasikan antarmuka utama aplikasi setelah pengguna berhasil login.
+ * Dashboard ini menyediakan navigasi ke berbagai modul seperti Data Pasien, Resep Obat, dan Pemberian Obat,
+ * dengan hak akses yang disesuaikan berdasarkan peran (role) pengguna (dokter atau staff farmasi).
+ * Misalnya, "staff farmasi" hanya dapat mengakses "Pemberian Obat", sementara "dokter" dapat mengakses semua fitur.</p>
+ */
 public class Dasboard extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Dasboard
+   /**
+     * Variabel instance untuk menyimpan peran (role) pengguna yang login.
+     * Peran ini digunakan untuk mengatur hak akses ke berbagai tombol di dashboard.
      */
-    public Dasboard() {
+    private String role;
+    /**
+     * Konstruktor untuk membuat objek `Dasboard` baru.
+     * menyesuaikan hak akses tombol berdasarkan peran pengguna.
+     * @param role Peran pengguna yang login (misalnya, "dokter" atau "staff farmasi").
+     */
+    public Dasboard(String role) {
+        this.role = role;
         initComponents();
+        setLocationRelativeTo(null);
+        aturAkses();
     }
+    /**
+     * Mengatur akses tombol di dashboard berdasarkan peran pengguna.
+     * Jika peran adalah "staff farmasi", tombol "Data Pasien" dan "Resep Obat" akan dinonaktifkan.
+     * Jika peran adalah "dokter", semua tombol akan diaktifkan.
+     */
+    private void aturAkses() {
+    if (role.equalsIgnoreCase("staff farmasi")) {
+        jButton1.setEnabled(false); 
+        jButton2.setEnabled(false); 
+        jButton3.setEnabled(true);  
+    } else if (role.equalsIgnoreCase("dokter")) {
+        jButton1.setEnabled(true);
+        jButton2.setEnabled(true);
+        jButton3.setEnabled(true);
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,7 +58,6 @@ public class Dasboard extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
@@ -38,6 +66,8 @@ public class Dasboard extends javax.swing.JFrame {
         panel2 = new java.awt.Panel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
@@ -53,6 +83,7 @@ public class Dasboard extends javax.swing.JFrame {
         jLabel8.setText("jLabel8");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(204, 0, 102));
 
@@ -76,8 +107,6 @@ public class Dasboard extends javax.swing.JFrame {
         });
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/data_pasien__1_-removebg-preview.png"))); // NOI18N
-
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/1ac5869fac2191a136baba1080bec159__1_-removebg-preview.png"))); // NOI18N
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/pemberian_obat__1_-removebg-preview.png"))); // NOI18N
 
@@ -119,7 +148,7 @@ public class Dasboard extends javax.swing.JFrame {
                     .addGroup(panel2Layout.createSequentialGroup()
                         .addGap(129, 129, 129)
                         .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         panel2Layout.setVerticalGroup(
             panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,6 +159,16 @@ public class Dasboard extends javax.swing.JFrame {
                 .addComponent(jLabel10)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
+
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/obat.png"))); // NOI18N
+
+        jButton4.setBackground(new java.awt.Color(204, 204, 204));
+        jButton4.setText("Logout");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -146,20 +185,22 @@ public class Dasboard extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(21, 21, 21)
-                                .addComponent(jLabel6)
-                                .addGap(31, 31, 31))
+                                .addComponent(jLabel6))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)))
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addGap(31, 31, 31)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3))))
+                            .addComponent(jButton3)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(jButton4)))
                 .addGap(55, 55, 55)
                 .addComponent(panel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -181,17 +222,21 @@ public class Dasboard extends javax.swing.JFrame {
                     .addComponent(jButton1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(6, 6, 6))
                     .addComponent(jButton2))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(32, 32, 32)
                         .addComponent(jButton3)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                         .addComponent(jLabel5)
-                        .addGap(75, 75, 75))))
+                        .addGap(48, 48, 48)))
+                .addComponent(jButton4)
+                .addGap(24, 24, 24))
             .addComponent(panel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -208,7 +253,13 @@ public class Dasboard extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+     * Event handler untuk tombol "Data Pasien" (`jButton1`).
+     * Membuka jendela `DataPasien`, menyembunyikan jendela dashboard saat ini,
+     * dan menambahkan `WindowListener` untuk mendeteksi penutupan jendela `DataPasien`.
+     * Jika `DataPasien` ditutup tanpa menyimpan data, dashboard akan ditampilkan kembali.
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     DataPasien.dataDisimpan = false;
     DataPasien dataPasien = new DataPasien();  
@@ -229,7 +280,14 @@ public class Dasboard extends javax.swing.JFrame {
     
 
     }//GEN-LAST:event_jButton1ActionPerformed
-
+/**
+     * Event handler untuk tombol "Resep Obat" (`jButton2`).
+     * Membuka jendela `ResepObat`, menyembunyikan jendela dashboard saat ini,
+     * dan menambahkan `WindowListener` untuk mendeteksi penutupan jendela `ResepObat`.
+     * Jika `ResepObat` ditutup tanpa melanjutkan ke Pemberian Obat, dashboard akan ditampilkan kembali.
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
      ResepObat.dataDisimpan = false;
     ResepObat resepObat = new ResepObat();
@@ -247,7 +305,14 @@ public class Dasboard extends javax.swing.JFrame {
         }
     });
     }//GEN-LAST:event_jButton2ActionPerformed
-
+/**
+     * Event handler untuk tombol "Pemberian Obat" (`jButton3`).
+     * Membuka jendela `PemberianObat`, menyembunyikan jendela dashboard saat ini,
+     * dan menambahkan `WindowListener` untuk mendeteksi penutupan jendela `PemberianObat`.
+     * Dashboard akan ditampilkan kembali setelah jendela `PemberianObat` ditutup.
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
+     */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
     PemberianObat pemberianObat = new PemberianObat();
     pemberianObat.setVisible(true);
@@ -266,9 +331,34 @@ public class Dasboard extends javax.swing.JFrame {
     }
 });
     }//GEN-LAST:event_jButton3ActionPerformed
+ /**
+     * Event handler untuk tombol "Logout" (`jButton4`).
+     * Menampilkan dialog konfirmasi kepada pengguna. Jika pengguna memilih "Ya",
+     * jendela dashboard akan ditutup dan jendela `Login` akan ditampilkan.
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
+     */
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        int pilihan = JOptionPane.showConfirmDialog(
+        this,
+        "Anda yakin ingin keluar?",
+        "Konfirmasi Logout",
+        JOptionPane.YES_NO_OPTION
+    );
 
-    /**
-     * @param args the command line arguments
+    if (pilihan == JOptionPane.YES_OPTION) {
+        this.dispose(); // Tutup Dasboard
+        new Login().setVisible(true); // Tampilkan GUI Login
+    }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+/**
+     * Metode main untuk menjalankan aplikasi.
+     * Membuat instance `Dasboard` baru (dengan peran default "dokter" untuk tujuan pengujian)
+     * dan menampilkannya di event dispatch thread Swing.
+     *
+     * @param args Argumen baris perintah (tidak digunakan dalam aplikasi ini).
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -297,7 +387,7 @@ public class Dasboard extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Dasboard().setVisible(true);
+                new Dasboard("dokter").setVisible(true);
             }
         });
     }
@@ -306,9 +396,10 @@ public class Dasboard extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

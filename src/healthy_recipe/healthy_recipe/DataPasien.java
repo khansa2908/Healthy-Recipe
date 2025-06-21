@@ -15,9 +15,9 @@ interface PasienData{
 
 class Pasien {
     protected String nama;
-    protected java.util.Date tanggalLahir; // Ubah dari String umur menjadi Date tanggalLahir
+    protected java.util.Date tanggalLahir; 
 
-    public Pasien(String nama, java.util.Date tanggalLahir) { // Sesuaikan konstruktor
+    public Pasien(String nama, java.util.Date tanggalLahir) { 
         this.nama = nama;
         this.tanggalLahir = tanggalLahir;
     }
@@ -35,22 +35,22 @@ public PreparedStatement pst;
 public ResultSet rs = null;
      @Override
     public void simpanData() {
-        // logika simpan data ke database
+       
     }
 
     @Override
     public void hapusData() {
-        // logika hapus data
+        
     }
 
     @Override
     public void updateData() {
-        // logika update data
+       
     }
 
     @Override
     public void tampilData() {
-        // logika tampil data
+        
     }
     public static String namaPasienGlobal;
     
@@ -87,7 +87,7 @@ public ResultSet rs = null;
     }
     public static boolean dataDisimpan = false;
 
-    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {
+    private void simpanActionPerformed(java.awt.event.ActionEvent evt) {
     
     DataPasien.dataDisimpan = true;
 
@@ -270,21 +270,21 @@ public ResultSet rs = null;
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+       
     String nama = jTextField1.getText().trim();
     java.util.Date tanggalLahir = jDateChooser2.getDate();
     String alamat = jTextField3.getText().trim();
     String jenisKelamin = (String) jComboBox1.getSelectedItem();
     java.util.Date tanggalKunjungan = jDateChooser1.getDate();
 
-    // Validasi semua kolom diisi
+   
     if (nama.isEmpty() || alamat.isEmpty() ||
             jenisKelamin.equals("Pilih") || tanggalKunjungan == null || tanggalLahir == null) {
             JOptionPane.showMessageDialog(this, "Semua kolom harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
     }
 
-    // Validasi nama hanya huruf dan spasi (tanpa regex)
+    
     boolean namaValid = true;
     for (char c : nama.toCharArray()) {
         if (!Character.isLetter(c) && !Character.isSpaceChar(c)) {
@@ -303,38 +303,33 @@ public ResultSet rs = null;
     pasien.tampilkanInfo();
     }
       try {
-            // Get connection
-            Connection conn = this.con; // Use the established connection
-            java.sql.Date sqlTanggalKunjungan = new java.sql.Date(tanggalKunjungan.getTime());
-            java.sql.Date sqlTanggalLahir = new java.sql.Date(tanggalLahir.getTime()); // Konversi java.util.Date ke java.sql.Date
             
-            // Prepare SQL statement
-            // Pastikan urutan dan jumlah placeholder (?) sesuai dengan setXXX
+            Connection conn = this.con; 
+            java.sql.Date sqlTanggalKunjungan = new java.sql.Date(tanggalKunjungan.getTime());
+            java.sql.Date sqlTanggalLahir = new java.sql.Date(tanggalLahir.getTime()); 
+            
+           
             String sql = "INSERT INTO pasien (nama_pasien, tanggal_kunjungan, tanggal_lahir, jenis_kelamin, alamat) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setString(1, nama);
             pst.setDate(2, sqlTanggalKunjungan);
-            pst.setDate(3, sqlTanggalLahir); // <-- BARIS INI HARUS ADA DAN BENAR POSISINYA
+            pst.setDate(3, sqlTanggalLahir); 
             pst.setString(4, jenisKelamin);
             pst.setString(5, alamat);
-            // Execute update
+           
             pst.executeUpdate();
 
             JOptionPane.showMessageDialog(this, "Data berhasil disimpan");
 
-            // Save the patient name globally for use in ResepObat
+           
             namaPasienGlobal = nama;
 
-            // Open ResepObat form
             ResepObat resep = new ResepObat();
             resep.setVisible(true);
             this.dispose();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error saat menyimpan data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    
-
-
     
     }//GEN-LAST:event_jButton1ActionPerformed
 

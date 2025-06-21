@@ -6,18 +6,22 @@ import java.awt.event.MouseEvent;
 import javax.swing.ButtonGroup;
 
 
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+/**
+ * Kelas Login merepresentasikan tampilan antarmuka pengguna (GUI)
+ * untuk proses login ke dalam aplikasi Healthy Recipe.
+ * Pengguna harus mengisi username, password (hanya angka), dan memilih peran (dokter atau staff farmasi).
+ * Jika informasi benar dan cocok di database, maka pengguna akan diarahkan ke dashboard sesuai peran.
+ * Koneksi dilakukan menggunakan JDBC ke database MySQL.
  */
-
 public class Login extends javax.swing.JFrame implements Loginable{
 public Connection con;
 public Statement stm;
 public PreparedStatement pst;
 public ResultSet rs = null;
-
+/**
+ * Membuat koneksi ke database MySQL.
+ * Akan menampilkan pesan berhasil/gagal koneksi melalui JOptionPane.
+ */
 public void koneksi(){
     try{
         String url = "jdbc:mysql://localhost:3307/healthy_recipe";
@@ -26,11 +30,20 @@ public void koneksi(){
         Class.forName("com.mysql.cj.jdbc.Driver");
         con = DriverManager.getConnection(url, user, pass);
         stm = con.createStatement();
-        
+         JOptionPane.showMessageDialog(this, "Koneksi berhasil");
     } catch (ClassNotFoundException | SQLException e) {
         JOptionPane.showMessageDialog(null, "Koneksi gagal: " + e.getMessage());
     }
 }
+/**
+ * Melakukan proses login berdasarkan input username, password, dan role.
+ * Akan membuka dashboard jika login berhasil.
+ *
+ * @param username Username pengguna
+ * @param password Password pengguna (dalam bentuk angka)
+ * @param role     Peran pengguna (dokter atau staff farmasi)
+ * @return true jika login berhasil, false jika gagal
+ */
 @Override  
 public boolean login(String username, String password, String role) {
     if (role.isEmpty()) {
@@ -50,30 +63,24 @@ public boolean login(String username, String password, String role) {
         rs = pst.executeQuery();
 
         if (rs.next()) {
-            JOptionPane.showMessageDialog(this, "Login berhasil sebagai " + role);
-            loginBerhasil = true;
+        JOptionPane.showMessageDialog(this, "Login berhasil sebagai " + role);
+        loginBerhasil = true;
 
-            if (role.equals("dokter")) {
-                new Dasboard().setVisible(true);
-            } else if (role.equals("staff farmasi")) {
-                new PemberianObat().setVisible(true);
-            }
-
-            this.dispose(); 
-        } else {
-            JOptionPane.showMessageDialog(this, "Login gagal. Cek kembali username/password/role.", "Peringatan", JOptionPane.WARNING_MESSAGE);
-        }
+        new Dasboard(role).setVisible(true); 
+        this.dispose(); 
+    } else {
+        JOptionPane.showMessageDialog(this, "Login gagal. Cek kembali username/password/role.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+    }
 
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, "Kesalahan saat login: " + e.getMessage());
-        e.printStackTrace(); // Sangat penting untuk debugging
+        e.printStackTrace(); 
     } finally {
-        // Tutup resources untuk menghindari memory leaks
+        
         try {
             if (rs != null) rs.close();
             if (pst != null) pst.close();
-            // Tidak perlu menutup 'con' di sini jika Anda ingin menggunakan koneksi ini di tempat lain
-            // if (con != null) con.close(); 
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -82,9 +89,10 @@ public boolean login(String username, String password, String role) {
 }
 
 
-    /**
-     * Creates new form Login
-     */
+/**
+ * Konstruktor untuk membuat form login dan menginisialisasi komponen GUI.
+ * Termasuk pengaturan lokasi, koneksi ke database, dan penanganan klik pada label register.
+ */
     public Login() {
         initComponents();
         
@@ -295,7 +303,12 @@ public boolean login(String username, String password, String role) {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+ * Menangani klik tombol Login.
+ * Mengambil data dari form dan memanggil method login().
+ *
+ * @param evt Event saat tombol diklik
+ */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     String username = jTextField1.getText();
@@ -328,16 +341,26 @@ public boolean login(String username, String password, String role) {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
+/**
+ * Menampilkan atau menyembunyikan password ketika checkbox diubah.
+ *
+ * @param evt Event perubahan checkbox
+ */
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
         if (jCheckBox1.isSelected()) {
-        jPasswordField1.setEchoChar((char) 0); // Tampilkan password
+        jPasswordField1.setEchoChar((char) 0); 
     } else {
-        jPasswordField1.setEchoChar('*'); // Sembunyikan password
-    }
+        jPasswordField1.setEchoChar('*'); 
+        }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
- private void registerLabelMouseClicked(java.awt.event.MouseEvent evt){
+ /**
+ * Menangani event klik pada label "Belum memiliki akun?".
+ * Akan membuka form Register dan menutup form Login.
+ *
+ * @param evt Event klik mouse
+ */
+    private void registerLabelMouseClicked(java.awt.event.MouseEvent evt){
      Register reg = new Register();
      reg.setLocationRelativeTo(this);
      reg.setVisible(true);
