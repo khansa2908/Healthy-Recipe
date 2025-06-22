@@ -248,9 +248,9 @@ public void koneksi(){
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
          if (jCheckBox1.isSelected()) {
-        jPasswordField1.setEchoChar((char) 0); // Tampilkan password
+        jPasswordField1.setEchoChar((char) 0); 
     } else {
-        jPasswordField1.setEchoChar('*'); // Sembunyikan password
+        jPasswordField1.setEchoChar('*');
     }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
@@ -279,7 +279,7 @@ public void koneksi(){
         return;
     }
     
-      if (!username.matches("[a-zA-Z]+")) {
+    if (!username.matches("[a-zA-Z]+")) {
         JOptionPane.showMessageDialog(this, "Username hanya boleh terdiri dari huruf!");
         return;
     }

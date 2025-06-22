@@ -109,9 +109,6 @@ public boolean login(String username, String password, String role) {
         }
        });
     }
-    public interface Loginable {
-        boolean login(String username, String password, String role);
-}
 
 
     /**

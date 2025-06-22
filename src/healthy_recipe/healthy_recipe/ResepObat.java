@@ -8,7 +8,7 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 
 /**
-* Kelas `ResepObat` adalah antarmuka pengguna (GUI) untuk membuat dan mengelola resep obat
+* Kelas `ResepObat` adalah GUI untuk membuat dan mengelola resep obat
  * untuk pasien. Pengguna dapat memilih pasien, menambahkan diagnosa, serta menambahkan obat
  * beserta dosisnya ke dalam daftar resep. Resep yang sudah dibuat dapat disimpan ke database.
  *
