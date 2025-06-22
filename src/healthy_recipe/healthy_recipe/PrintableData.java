@@ -5,9 +5,9 @@
 package healthy_recipe.healthy_recipe;
 
 /**
- *
- * @author tiara salsabila
- */
+     * Interface `PrintableData` yang mendefinisikan kontrak untuk objek yang datanya
+     * dapat diformat menjadi string untuk tujuan pencetakan atau tampilan.
+     */
 public interface PrintableData {
     String getDataFormatted();
 }

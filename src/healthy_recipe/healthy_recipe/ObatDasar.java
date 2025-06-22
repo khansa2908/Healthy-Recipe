@@ -5,8 +5,9 @@
 package healthy_recipe.healthy_recipe;
 
 /**
- *
- * @author tiara salsabila
+ * Kelas `ObatDasar` merupakan kelas dasar yang merepresentasikan informasi dasar mengenai obat.
+ * Kelas ini memiliki properti untuk menyimpan nama obat dan dosisnya.
+ 
  */
 public class ObatDasar {
     protected String obat;

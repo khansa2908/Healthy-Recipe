@@ -5,34 +5,50 @@ import java.sql.*;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
+/**
+ * interface PasienData mendefinisikan metode dasar
+ * untuk operasi terhadap data pasien.
+ */
 interface PasienData{
     void simpanData();
     void hapusData();
     void updateData();
     void tampilData();
 }
-
+/**
+ * Kelas Pasien menyimpan data dasar seorang pasien seperti nama dan tanggal lahir.
+ */
 class Pasien {
     protected String nama;
     protected java.util.Date tanggalLahir; 
-
+/**
+     * Konstruktor untuk membuat objek Pasien dengan nama dan tanggal lahir.
+     *
+     * @param nama         Nama pasien
+     * @param tanggalLahir Tanggal lahir pasien
+     */
     public Pasien(String nama, java.util.Date tanggalLahir) { 
         this.nama = nama;
         this.tanggalLahir = tanggalLahir;
     }
-
+  /**
+     * Menampilkan informasi pasien ke konsol.
+     */
     public void tampilkanInfo() {
         System.out.println("Nama: " + nama + ", Tanggal Lahir: " + (tanggalLahir != null ? tanggalLahir.toString() : "N/A"));
     }
 }
 
-
+/**
+ * Kelas DataPasien merupakan JFrame yang menampilkan form
+ * untuk menambah data pasien baru dan menyimpannya ke database.
+ */
 public class DataPasien extends javax.swing.JFrame implements PasienData{
 public Connection con;
 public Statement stm;
 public PreparedStatement pst;
 public ResultSet rs = null;
+
      @Override
     public void simpanData() {
        
@@ -52,8 +68,16 @@ public ResultSet rs = null;
     public void tampilData() {
         
     }
+    /**
+     * Menyimpan nama pasien secara global agar bisa digunakan di kelas lain.
+     */
     public static String namaPasienGlobal;
-    
+ /**
+     * Konstruktor DataPasien yang menerima nama dan tanggal lahir pasien.
+     *
+     * @param nama         Nama pasien
+     * @param tanggalLahir Tanggal lahir pasien
+     */   
     public DataPasien(String nama, java.util.Date tanggalLahir) {
         super(); // memanggil constructor JFrame
         new Pasien(nama, tanggalLahir).tampilkanInfo();
@@ -73,8 +97,8 @@ public ResultSet rs = null;
         JOptionPane.showMessageDialog(null, "Koneksi gagal: " + e.getMessage());
     }
 }
-    /**
-     * Creates new form DataPasien
+/**
+     * Konstruktor default yang memanggil initComponents dan koneksi database.
      */
     public DataPasien() {
         
@@ -85,6 +109,9 @@ public ResultSet rs = null;
         koneksi();
         
     }
+/**
+     * Status apakah data telah disimpan, digunakan untuk interaksi antar form.
+     */    
     public static boolean dataDisimpan = false;
 
     private void simpanActionPerformed(java.awt.event.ActionEvent evt) {
@@ -268,7 +295,12 @@ public ResultSet rs = null;
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+ /**
+     * Event handler untuk tombol "Simpan".
+     * Memvalidasi input form dan menyimpan data ke database jika valid.
+     *
+     * @param evt Event tombol diklik
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
        
     String nama = jTextField1.getText().trim();
@@ -341,8 +373,10 @@ public ResultSet rs = null;
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    /**
-     * @param args the command line arguments
+/**
+     * Metode main untuk menjalankan aplikasi DataPasien.
+     *
+     * @param args Argumen command line
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

@@ -328,6 +328,7 @@ public class Dasboard extends javax.swing.JFrame {
         // Reset flags
         ResepObat.dataDisimpan = false;
         ResepObat.lanjutKePemberianObat = false;
+
     }
 });
     }//GEN-LAST:event_jButton3ActionPerformed

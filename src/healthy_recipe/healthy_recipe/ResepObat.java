@@ -8,17 +8,31 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 
 /**
+* Kelas `ResepObat` adalah antarmuka pengguna (GUI) untuk membuat dan mengelola resep obat
+ * untuk pasien. Pengguna dapat memilih pasien, menambahkan diagnosa, serta menambahkan obat
+ * beserta dosisnya ke dalam daftar resep. Resep yang sudah dibuat dapat disimpan ke database.
  *
- * @author tiara salsabila
+ * Kelas ini menggunakan `JList` dan `DefaultListModel` untuk menampilkan daftar diagnosa dan obat/dosis
+ * yang dipilih, serta `JComboBox` untuk pemilihan data. Fitur penghapusan item dari `JList` juga tersedia
+ * sebelum resep disimpan secara permanen.
  */
 public class ResepObat extends javax.swing.JFrame {
+/**
+     * Model daftar untuk menyimpan dan menampilkan diagnosa penyakit.
+     */
 DefaultListModel<String> diagnosaModel = new DefaultListModel<>();
+ /**
+     * Model daftar untuk menyimpan dan menampilkan nama obat beserta dosisnya.
+     */
 DefaultListModel<String> obatModel = new DefaultListModel<>();
 public Connection con;
 public Statement stm;
 public PreparedStatement pst;
 public ResultSet rs = null;
-
+/**
+     * Membuat koneksi ke database MySQL.
+     * Pesan error akan ditampilkan jika koneksi gagal.
+     */
 public void koneksi(){
     try{
         String url = "jdbc:mysql://localhost:3307/healthy_recipe";
@@ -32,6 +46,11 @@ public void koneksi(){
         JOptionPane.showMessageDialog(null, "Koneksi gagal: " + e.getMessage());
     }
 }
+/**
+     * Mengisi `jComboBox1` (Dropdown Pasien) dengan daftar nama pasien dari database.
+     * Jika koneksi database belum tersedia atau terjadi kesalahan saat memuat,
+     * pesan peringatan akan ditampilkan.
+     */
 private void populatePasienCombo() {
     jComboBox1.removeAllItems();
     jComboBox1.addItem("Pilih");          
@@ -56,8 +75,11 @@ private void populatePasienCombo() {
     }
 }
 
-    /**
-     * Creates new form ResepObat
+/**
+     * Konstruktor untuk membuat objek `ResepObat` baru.
+     * Menginisialisasi komponen GUI, mengatur operasi penutupan frame ke `DISPOSE_ON_CLOSE`
+     * (agar hanya frame ini yang ditutup, bukan seluruh aplikasi), menempatkan frame di tengah layar,
+     * membuat koneksi database, mengisi daftar pasien, dan mengatur model untuk `JList` diagnosa dan obat.
      */
     public ResepObat() {
     initComponents();
@@ -69,7 +91,15 @@ private void populatePasienCombo() {
     jList1.setModel(diagnosaModel);
     jList2.setModel(obatModel);
 }
+/**
+     * untuk menunjukkan apakah data resep telah berhasil disimpan.
+     * Digunakan untuk komunikasi antar frame, misalnya dengan `Dasboard`.
+     */
     public static boolean dataDisimpan = false;
+/**
+     * untuk menunjukkan apakah navigasi ke frame `PemberianObat` harus dilanjutkan
+     * setelah menyimpan resep. 
+     */
     public static boolean lanjutKePemberianObat = false;
 
     private void simpanResepActionPerformed(java.awt.event.ActionEvent evt) {
@@ -304,7 +334,13 @@ private void populatePasienCombo() {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+     * Event handler untuk tombol "Simpan Resep" (`jButton2`).
+     * Melakukan validasi input, mengumpulkan data diagnosa dan obat dari `JList`,
+     * lalu menyimpan data resep ke database. 
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
    String namaPasien = (String) jComboBox1.getSelectedItem();
      // Validasi Pasien
@@ -361,19 +397,36 @@ private void populatePasienCombo() {
         }
     
     }//GEN-LAST:event_jButton2ActionPerformed
-
+/**
+     * Event handler untuk `jComboBox2` (Nama Obat).
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh aksi.
+     */
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox2ActionPerformed
-
+ /**
+     * Event handler untuk `jComboBox3` (Diagnosa Penyakit).
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh aksi.
+     */
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox3ActionPerformed
-
+/**
+     * Event handler untuk `jComboBox1` (Pilih Pasien).
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh aksi.
+     */
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here      
     }//GEN-LAST:event_jComboBox1ActionPerformed
-
+/**
+     * Event handler untuk tombol "Tambahkan diagnosa" (`jButton3`).
+     * Mengambil diagnosa yang dipilih dari `jComboBox3` dan menambahkannya ke `diagnosaModel`
+     * (yang kemudian akan ditampilkan di `jList1`). Mencegah penambahan diagnosa yang duplikat.
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
+     */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
     String selectedDiagnosa = (String) jComboBox3.getSelectedItem();
@@ -394,7 +447,14 @@ private void populatePasienCombo() {
     jComboBox3.setSelectedIndex(0);
     }
     }//GEN-LAST:event_jButton3ActionPerformed
-
+ /**
+     * Event handler untuk tombol "Tambahkan Obat" (`jButton1`).
+     * Mengambil nama obat dari `jComboBox2` dan dosis dari `jComboBox4`,
+     * menggabungkannya, lalu menambahkannya ke `obatModel` (yang akan ditampilkan di `jList2`).
+     * Mencegah penambahan obat dengan dosis yang sama secara duplikat.
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     String selectedObat = (String) jComboBox2.getSelectedItem();
@@ -425,11 +485,20 @@ private void populatePasienCombo() {
     }
 
     }//GEN-LAST:event_jButton1ActionPerformed
-
+/**
+     * Event handler untuk `jComboBox4` (Dosis).
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh aksi.
+     */
     private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox4ActionPerformed
-
+/**
+     * Event handler untuk tombol "Delete" (`jButton4`) yang terkait dengan `jList1` (Diagnosa).
+     * Menghapus diagnosa yang dipilih dari `jList1`.
+     * Menampilkan pesan peringatan jika tidak ada item yang dipilih.
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
+     */
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
          int selectedIndex = jList1.getSelectedIndex(); 
@@ -441,7 +510,13 @@ private void populatePasienCombo() {
         JOptionPane.showMessageDialog(this, "Pilih diagnosa yang ingin dihapus.", "Peringatan", JOptionPane.WARNING_MESSAGE);
     }
     }//GEN-LAST:event_jButton4ActionPerformed
-
+/**
+     * Event handler untuk tombol "Delete" (`jButton5`) yang terkait dengan `jList2` (Obat).
+     * Menghapus item obat beserta dosisnya yang dipilih dari `jList2`.
+     * Menampilkan pesan peringatan jika tidak ada item yang dipilih.
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
+     */
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         int selectedIndex = jList2.getSelectedIndex(); 

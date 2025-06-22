@@ -10,20 +10,37 @@ import java.awt.print.*;
  */
 
 /**
+ * Kelas `PemberianObat` adalah antarmuka pengguna (GUI) untuk staf farmasi
+ * guna mengelola (CRUD: Create, Read, Update, Delete) dan mencetak resep obat.
+ * Aplikasi ini menampilkan riwayat resep obat dalam tabel, memungkinkan pencarian,
+ * serta menyediakan form dan tombol untuk menambah, mengedit, dan menghapus resep.
  *
- * @author tiara salsabila
+ * Kelas ini juga mendefinisikan inner class `ResepPrinter` untuk fungsionalitas pencetakan
+ * dan `ResepObatData` sebagai model data resep yang mendukung konsep pewarisan dan polimorfisme.
  */
-
 public class PemberianObat extends javax.swing.JFrame {
      Connection con;
-     
+ /**
+     * Inner class `ResepPrinter` mengimplementasikan interface `Printable`
+     * untuk menangani proses pencetakan resep obat.
+     */    
 class ResepPrinter implements Printable {
     private String isiResep;
-
+/**
+         * Konstruktor untuk `ResepPrinter`.
+         * @param isiResep String yang berisi data resep yang telah diformat.
+         */
     public ResepPrinter(String isiResep) {
         this.isiResep = isiResep;
     }
-
+/**
+         * Mengimplementasikan metode `print` dari interface `Printable`.
+         * @param g Objek `Graphics` yang digunakan untuk menggambar.
+         * @param pf Objek `PageFormat` yang mendeskripsikan ukuran dan orientasi halaman.
+         * @param pageIndex Indeks halaman yang akan dicetak (dimulai dari 0).
+         * @return `Printable.PAGE_EXISTS` jika halaman berhasil dicetak, atau `Printable.NO_SUCH_PAGE` jika
+         * indeks halaman di luar batas.
+         */
     @Override
     public int print(Graphics g, PageFormat pf, int pageIndex) throws PrinterException {
         if (pageIndex > 0) {
@@ -45,20 +62,43 @@ class ResepPrinter implements Printable {
         return PAGE_EXISTS;
     }
 }
+/**
+     * Inner class `ResepObatData` mewakili satu entri resep obat,
+     * yang mewarisi dari `ObatDasar` dan mengimplementasikan `PrintableData`.
+     * Kelas ini mendemonstrasikan konsep inheritance, overloading (konstruktor),
+     * overriding (metode `getDataFormatted`), dan enkapsulasi.
+     */
 class ResepObatData extends ObatDasar implements PrintableData {
     private String pasien, diagnosa, obat, dosis;
 
+/**
+         * Konstruktor untuk `ResepObatData` yang menginisialisasi semua detail resep.
+         * Ini adalah contoh Constructor Overloading.
+         *
+         * @param pasien Nama pasien yang diresepkan.
+         * @param diagnosa Diagnosa penyakit pasien.
+         * @param obat Nama obat yang diresepkan.
+         * @param dosis Dosis obat yang diresepkan.
+         */  
     public ResepObatData(String pasien, String diagnosa, String obat, String dosis) {
         this.pasien = pasien;
         this.diagnosa = diagnosa;
         this.obat = obat;
         this.dosis = dosis;
     }
+/**
+         * Konstruktor kedua untuk `ResepObatData` yang hanya menginisialisasi
+         * pasien dan diagnosa, dengan nilai default untuk obat dan dosis.
+         * Ini adalah contoh Constructor Overloading.
+         *
+         * @param pasien Nama pasien.
+         * @param diagnosa Diagnosa penyakit.
+         */
     public ResepObatData(String pasien, String diagnosa) {
     this.pasien = pasien;
     this.diagnosa = diagnosa;
-    this.obat = "Belum ada";  // default value
-    this.dosis = "Belum ditentukan"; // default value
+    this.obat = "Belum ada";  
+    this.dosis = "Belum ditentukan"; 
 }
    public String getPasien() {
         return pasien;
@@ -92,7 +132,13 @@ class ResepObatData extends ObatDasar implements PrintableData {
         this.dosis = dosis;
     }
 
-
+ /**
+         * Mengimplementasikan dan meng-override metode `getDataFormatted()`
+         * dari interface `PrintableData`.
+         * Memformat detail resep obat menjadi sebuah string yang mudah dibaca,
+         *
+         * @return String yang diformat berisi detail resep obat.
+         */
     @Override
     public String getDataFormatted() {
         return "=== CETAK RESEP OBAT ===\n"
@@ -104,8 +150,11 @@ class ResepObatData extends ObatDasar implements PrintableData {
     }
 }
 
-    /**
-     * Creates new form PemberianObat
+/**
+     * Konstruktor untuk membuat objek `PemberianObat` baru.
+     * Menginisialisasi komponen GUI, mengatur posisi frame di tengah layar,
+     * mengatur operasi penutupan frame agar hanya menutup frame ini (`DISPOSE_ON_CLOSE`),
+     * membangun koneksi ke database, dan memuat data resep awal ke dalam tabel.
      */
     public PemberianObat() {
         super();
@@ -285,13 +334,29 @@ class ResepObatData extends ObatDasar implements PrintableData {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+     * Event handler untuk aksi pada `jTextField1` (kolom pencarian).
+     * Metode ini dipanggil ketika pengguna menekan tombol Enter
+     * setelah memasukkan teks di `jTextField1`. Ini akan memicu pembaruan
+     * data di tabel berdasarkan kata kunci yang dimasukkan.
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh aksi pengguna.
+     */
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
      String keyword= jTextField1.getText();
      tampilkanData(keyword);
     }//GEN-LAST:event_jTextField1ActionPerformed
-
+/**
+     * Event handler untuk tombol "Cetak Resep" (`jButton1`).
+     * Metode ini dipanggil ketika tombol cetak diklik.
+     * Ini memeriksa apakah ada baris yang dipilih di `jTable1`.
+     * Jika ada, data resep dari baris yang dipilih akan diambil, diformat,
+     * dan dikirim ke printer. Pesan peringatan akan ditampilkan jika tidak ada
+     * baris yang dipilih atau jika terjadi kesalahan selama pencetakan.
+     *
+     * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     int baris = jTable1.getSelectedRow();
@@ -321,9 +386,10 @@ class ResepObatData extends ObatDasar implements PrintableData {
     }
 }
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    /**
-     * @param args the command line arguments
+/**
+     * Metode main untuk menjalankan aplikasi.
+     * Mengatur Look and Feel Swing ke "Nimbus" untuk tampilan yang lebih modern.
+     * Kemudian, membuat instance baru dari `PemberianObat` dan menampilkannya
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
