@@ -115,19 +115,19 @@ class ResepObatData extends ObatDasar implements PrintableData {
     public void setDiagnosa(String diagnosa) {
         this.diagnosa = diagnosa;
     }
-
+    @Override
     public String getObat() {
         return obat;
     }
-
+    @Override
     public void setObat(String obat) {
         this.obat = obat;
     }
-
+    @Override
     public String getDosis() {
         return dosis;
     }
-
+    @Override
     public void setDosis(String dosis) {
         this.dosis = dosis;
     }
@@ -369,7 +369,10 @@ class ResepObatData extends ObatDasar implements PrintableData {
         String obat = jTable1.getValueAt(baris, 2).toString();
         String dosis = jTable1.getValueAt(baris, 3).toString();
 
-        PrintableData data = new ResepObatData(pasien, diagnosa, obat, dosis);
+       PrintableData data = new ResepObatData(pasien, diagnosa, obat, dosis);
+        if (data instanceof ResepObatData resep) {
+        System.out.println("Instanceof OK: " + resep.getPasien());
+    }
         String hasil = data.getDataFormatted();
 
         PrinterJob job = PrinterJob.getPrinterJob();
