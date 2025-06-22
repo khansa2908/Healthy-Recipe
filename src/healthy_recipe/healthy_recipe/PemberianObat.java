@@ -20,6 +20,11 @@ import java.awt.print.*;
  */
 public class PemberianObat extends javax.swing.JFrame {
      Connection con;
+     private String role;
+     
+public void setRole(String role) {
+     this.role = role;
+    }
  /**
      * Inner class `ResepPrinter` mengimplementasikan interface `Printable`
      * untuk menangani proses pencetakan resep obat.
@@ -358,36 +363,42 @@ class ResepObatData extends ObatDasar implements PrintableData {
      * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
      */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    int baris = jTable1.getSelectedRow();
-
-    if (baris == -1) {
-        JOptionPane.showMessageDialog(this, "Silakan pilih baris resep yang ingin dicetak!");
-    } else {
-        String pasien = jTable1.getValueAt(baris, 0).toString();
-        String diagnosa = jTable1.getValueAt(baris, 1).toString();
-        String obat = jTable1.getValueAt(baris, 2).toString();
-        String dosis = jTable1.getValueAt(baris, 3).toString();
-
-       PrintableData data = new ResepObatData(pasien, diagnosa, obat, dosis);
-        if (data instanceof ResepObatData resep) {
-        System.out.println("Instanceof OK: " + resep.getPasien());
-    }
-        String hasil = data.getDataFormatted();
-
-        PrinterJob job = PrinterJob.getPrinterJob();
-        job.setJobName("Cetak Resep");
-        job.setPrintable(new ResepPrinter(hasil));
-
-    boolean doPrint = job.printDialog();
-    if (doPrint) {
-        try {
-            job.print();
-        } catch (PrinterException ex) {
-            JOptionPane.showMessageDialog(this, "Gagal mencetak: " + ex.getMessage());
+    if (this.role == null || !"staff farmasi".equalsIgnoreCase(this.role)) {
+            JOptionPane.showMessageDialog(this, "Hanya staff farmasi yang dapat mencetak resep!", "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-    }
-}
+
+        int baris = jTable1.getSelectedRow();
+
+        if (baris == -1) {
+            JOptionPane.showMessageDialog(this, "Silakan pilih baris resep yang ingin dicetak!");
+        } else {
+            String pasien = jTable1.getValueAt(baris, 0).toString();
+            String diagnosa = jTable1.getValueAt(baris, 1).toString();
+            String obat = jTable1.getValueAt(baris, 2).toString();
+            String dosis = jTable1.getValueAt(baris, 3).toString();
+
+            PrintableData data = new ResepObatData(pasien, diagnosa, obat, dosis);
+
+            if (data instanceof ResepObatData resep) {
+                System.out.println("Instanceof OK: " + resep.getPasien());
+            }
+
+            String hasil = data.getDataFormatted();
+            PrinterJob job = PrinterJob.getPrinterJob();
+            job.setJobName("Cetak Resep");
+            job.setPrintable(new ResepPrinter(hasil));
+
+            boolean doPrint = job.printDialog();
+            if (doPrint) {
+                try {
+                    job.print();
+                } catch (PrinterException ex) {
+                    JOptionPane.showMessageDialog(this, "Gagal mencetak: " + ex.getMessage());
+                }
+            }
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 /**
      * Metode main untuk menjalankan aplikasi.

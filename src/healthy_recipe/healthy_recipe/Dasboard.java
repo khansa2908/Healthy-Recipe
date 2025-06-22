@@ -27,19 +27,11 @@ public class Dasboard extends javax.swing.JFrame {
     }
     /**
      * Mengatur akses tombol di dashboard berdasarkan peran pengguna.
-     * Jika peran adalah "staff farmasi", tombol "Data Pasien" dan "Resep Obat" akan dinonaktifkan.
-     * Jika peran adalah "dokter", semua tombol akan diaktifkan.
      */
     private void aturAkses() {
-    if (role.equalsIgnoreCase("staff farmasi")) {
-        jButton1.setEnabled(false); 
-        jButton2.setEnabled(false); 
-        jButton3.setEnabled(true);  
-    } else if (role.equalsIgnoreCase("dokter")) {
-        jButton1.setEnabled(true);
-        jButton2.setEnabled(true);
-        jButton3.setEnabled(true);
-    }
+    jButton1.setEnabled(true); 
+    jButton2.setEnabled(true); 
+    jButton3.setEnabled(true); 
 }
 
     /**
@@ -134,7 +126,7 @@ public class Dasboard extends javax.swing.JFrame {
 
         jLabel10.setFont(new java.awt.Font("STLiti", 1, 36)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("Healthy Ricepe");
+        jLabel10.setText("Healthy Recipe");
 
         javax.swing.GroupLayout panel2Layout = new javax.swing.GroupLayout(panel2);
         panel2.setLayout(panel2Layout);
@@ -163,7 +155,7 @@ public class Dasboard extends javax.swing.JFrame {
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gambar/obat.png"))); // NOI18N
 
         jButton4.setBackground(new java.awt.Color(204, 204, 204));
-        jButton4.setText("Logout");
+        jButton4.setText("Keluar");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -261,6 +253,11 @@ public class Dasboard extends javax.swing.JFrame {
      * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
      */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+     if (role.equalsIgnoreCase("staff farmasi")) {
+        JOptionPane.showMessageDialog(this, "Hanya dokter yang dapat mengakses Data Pasien.", "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
     DataPasien.dataDisimpan = false;
     DataPasien dataPasien = new DataPasien();  
     dataPasien.setVisible(true);               
@@ -273,12 +270,9 @@ public class Dasboard extends javax.swing.JFrame {
             if (!DataPasien.dataDisimpan) {
                 Dasboard.this.setVisible(true);
             }
-            // Reset flag agar tidak tertinggal
             DataPasien.dataDisimpan = false;
         }
     });
-    
-
     }//GEN-LAST:event_jButton1ActionPerformed
 /**
      * Event handler untuk tombol "Resep Obat" (`jButton2`).
@@ -289,7 +283,12 @@ public class Dasboard extends javax.swing.JFrame {
      * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
      */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-     ResepObat.dataDisimpan = false;
+     if (role.equalsIgnoreCase("staff farmasi")) {
+        JOptionPane.showMessageDialog(this, "Hanya dokter yang dapat mengakses Resep Obat.", "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    ResepObat.dataDisimpan = false;
     ResepObat resepObat = new ResepObat();
     resepObat.setVisible(true);
     this.setVisible(false);
@@ -306,15 +305,15 @@ public class Dasboard extends javax.swing.JFrame {
     });
     }//GEN-LAST:event_jButton2ActionPerformed
 /**
-     * Event handler untuk tombol "Pemberian Obat" (`jButton3`).
-     * Membuka jendela `PemberianObat`, menyembunyikan jendela dashboard saat ini,
-     * dan menambahkan `WindowListener` untuk mendeteksi penutupan jendela `PemberianObat`.
-     * Dashboard akan ditampilkan kembali setelah jendela `PemberianObat` ditutup.
+     * Event handler untuk tombol "Pemberian Obat".
+     * Dapat diakses oleh semua peran. Membuka form PemberianObat.
+     * Peran pengguna dikirim ke form tersebut melalui metode {@code setRole()}.
      *
-     * @param evt Objek `ActionEvent` yang dihasilkan oleh klik tombol.
+     * @param evt Objek ActionEvent dari tombol.
      */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
     PemberianObat pemberianObat = new PemberianObat();
+    pemberianObat.setRole(role);
     pemberianObat.setVisible(true);
     this.setVisible(false);
 
